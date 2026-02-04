@@ -1,0 +1,46 @@
+
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Optional: if you want to ensure there are no broken references,
+      # you can add simple checks here (e.g., list files).
+      - name: Verify static files exist
+        run: |
+          test -f index.html
+          test -f app.js
+          test -f styles.css
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      # Upload the repository root as the Pages artifact.
+      # If your site is in a subfolder (e.g. ./docs), change `path: .` to `path: ./docs`.
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
