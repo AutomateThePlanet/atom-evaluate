@@ -1,4 +1,4 @@
-# Quality Process Maturity Tracker (Static)
+# Quality Process Maturity Tracker
 
 A pure static (no backend) maturity tracking app that lets you:
 
