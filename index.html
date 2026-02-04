@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Maturity Metrics Tracker (LocalStorage v1)</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div>
+      <h1>Maturity Metrics Tracker</h1>
+      <p class="subtle">Static app • LocalStorage • 0–10 scoring • Snapshots for trends</p>
+    </div>
+    <div class="header-actions">
+      <button id="btnExport" class="btn">Export JSON</button>
+      <label class="btn btn-secondary">
+        Import JSON <input id="fileImport" type="file" accept="application/json" hidden />
+      </label>
+      <button id="btnReset" class="btn btn-danger">Reset</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <!-- LEFT: company + metrics + snapshots -->
+    <section class="card">
+      <h2>Company</h2>
+
+      <div class="row">
+        <select id="companySelect"></select>
+        <button id="btnAddCompany" class="btn btn-secondary">Add</button>
+        <button id="btnRenameCompany" class="btn btn-secondary">Rename</button>
+        <button id="btnDeleteCompany" class="btn btn-danger">Delete</button>
+      </div>
+
+      <div class="metrics">
+        <h3>Live Metrics</h3>
+        <div class="metrics-grid">
+          <div class="metric">
+            <div class="label" title="Team Skill Index (TSI): measures the team’s competence and proficiency in test automation (skills, experience, technical leadership).">TSI</div>
+            <div class="value" id="mTSI">—</div>
+          </div>
+          <div class="metric">
+            <div class="label" title="Test Quality Index (TQI): measures the robustness, reliability, maintainability, and effectiveness of the automated tests.">TQI</div>
+            <div class="value" id="mTQI">—</div>
+          </div>
+          <div class="metric">
+            <div class="label" title="Automated Testing Coverage (ATC): measures how well major business areas, subareas, and workflows are covered by automated tests.">ATC</div>
+            <div class="value" id="mATC">—</div>
+          </div>
+          <div class="metric highlight">
+            <div class="label" title="Test Automation Excellence Index (TAEI): overall automation maturity index. In ATOM: TAEI = (TSI + TQI + ATC) / 3 (each on 0–10 scale).">TAEI</div>
+            <div class="value" id="mTAEI">—</div>
+          </div>
+          <div class="metric">
+            <div class="label" title="Overall (Criteria-weighted): weighted average across all enabled criteria (normalized to 0–10).">Overall (Criteria-weighted)</div>
+            <div class="value" id="mOverallCriteria">—</div>
+          </div>
+          <div class="metric">
+            <div class="label" title="Overall (Dimensions avg): average of available dimension scores (TSI/TQI/ATC). Each dimension contributes equally.">Overall (Dimensions avg)</div>
+            <div class="value" id="mOverallDims">—</div>
+          </div>
+          <div class="metric">
+            <div class="label" title="Delta (C − D): difference between Overall(Criteria-weighted) and Overall(Dimensions avg). Positive means criteria-weighted is higher.">Δ Overall (C − D)</div>
+            <div class="value" id="mDeltaCD">—</div>
+          </div>
+          <div class="metric">
+            <div class="label" title="Delta (D − C): difference between Overall(Dimensions avg) and Overall(Criteria-weighted). Positive means dimensions average is higher.">Δ Overall (D − C)</div>
+            <div class="value" id="mDeltaDC">—</div>
+          </div>
+        </div>
+        <p class="subtle" id="mWarnings"></p>
+      </div>
+
+      <div class="snapshots">
+        <div class="row row-space">
+          <h3>Snapshots & Trends</h3>
+          <div class="row">
+            <button id="btnSaveSnapshot" class="btn">Save snapshot</button>
+            <button id="btnDeleteLastSnapshot" class="btn btn-danger">Delete last</button>
+          </div>
+        </div>
+
+        <canvas id="trendCanvas" width="900" height="260" aria-label="Trend chart"></canvas>
+
+        <div class="table-wrap">
+          <table class="table" id="snapTable">
+            <thead>
+              <tr>
+                <th>When</th>
+                <th>TSI</th>
+                <th>TQI</th>
+                <th>ATC</th>
+                <th>TAEI</th>
+                <th>Overall (C)</th>
+                <th>Overall (D)</th>
+                <th>Criteria ver</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- RIGHT: tabbed "edit mode" area -->
+    <section class="card">
+      <div class="mode-tabs" role="tablist" aria-label="Editor modes">
+        <button class="mode-tab is-active" id="tabCriteria" role="tab" aria-selected="true" aria-controls="panelCriteria" type="button">
+          Define Criteria
+        </button>
+        <button class="mode-tab" id="tabAssessment" role="tab" aria-selected="false" aria-controls="panelAssessment" type="button">
+          Fill Assessment
+        </button>
+      </div>
+
+      <!-- Criteria panel -->
+      <section id="panelCriteria" class="mode-panel" role="tabpanel" aria-labelledby="tabCriteria">
+        <div class="row row-space">
+          <h2 style="margin:0">Criteria Library</h2>
+          <button id="btnAddCriterion" class="btn btn-secondary" type="button">Add criterion</button>
+        </div>
+
+        <p class="subtle">
+          Define criteria first. Each criterion is scored 0–10 per company. Weights influence weighted averages.
+          Disabling a criterion clears stored scores/notes across all companies.
+        </p>
+
+        <div class="table-wrap">
+          <table class="table" id="criteriaTable">
+            <thead>
+              <tr>
+                <th>Enabled</th>
+                <th>Name</th>
+                <th>Dimension</th>
+                <th class="num">Weight</th>
+                <th class="num">Min</th>
+                <th class="num">Max</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Assessment panel -->
+      <section id="panelAssessment" class="mode-panel is-hidden" role="tabpanel" aria-labelledby="tabAssessment">
+        <div class="row row-space">
+          <h2 style="margin:0">Assessment (Current)</h2>
+          <button id="btnClearScores" class="btn btn-danger" type="button">Clear scores</button>
+        </div>
+
+        <p class="subtle">
+          Fill scores for the selected company. Scores save automatically to LocalStorage.
+        </p>
+
+        <div class="table-wrap">
+          <table class="table" id="assessmentTable">
+            <thead>
+              <tr>
+                <th>Criterion</th>
+                <th>Dim</th>
+                <th class="num">Weight</th>
+                <th class="num">Score (0–10)</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Tiny inline script: switches panels only (does not touch app logic) -->
+      <script>
+        (function () {
+          const tabCriteria = document.getElementById("tabCriteria");
+          const tabAssessment = document.getElementById("tabAssessment");
+          const panelCriteria = document.getElementById("panelCriteria");
+          const panelAssessment = document.getElementById("panelAssessment");
+
+          function show(mode) {
+            const isCriteria = mode === "criteria";
+
+            tabCriteria.classList.toggle("is-active", isCriteria);
+            tabAssessment.classList.toggle("is-active", !isCriteria);
+
+            tabCriteria.setAttribute("aria-selected", String(isCriteria));
+            tabAssessment.setAttribute("aria-selected", String(!isCriteria));
+
+            panelCriteria.classList.toggle("is-hidden", !isCriteria);
+            panelAssessment.classList.toggle("is-hidden", isCriteria);
+          }
+
+          tabCriteria.addEventListener("click", () => show("criteria"));
+          tabAssessment.addEventListener("click", () => show("assessment"));
+        })();
+      </script>
+    </section>
+  </main>
+
+  <footer class="footer subtle">
+    v1 • LocalStorage only • No external libraries
+  </footer>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

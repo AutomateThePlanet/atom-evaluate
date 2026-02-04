@@ -1,0 +1,412 @@
+:root{
+  --bg:#0b1220;
+  --card:#111a2e;
+  --text:#e8eefc;
+  --muted:#aeb9d6;
+  --accent:#5dd6c7;
+  --danger:#ff6b6b;
+  --line:#243153;
+
+  --btn:#1b2a4d;
+  --btn2:#162241;
+
+  --shadow: 0 6px 24px rgba(0,0,0,.35);
+  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-synthesis-weight: none;
+}
+
+*{ box-sizing:border-box; }
+
+html, body{ height: 100%; }
+
+body{
+  margin:0;
+  background: radial-gradient(1200px 700px at 10% 0%, #132046 0%, var(--bg) 55%) fixed;
+  color:var(--text);
+  font: 14px/1.4 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+}
+
+h1,h2,h3{ margin:0 0 10px; }
+
+hr{
+  border:0;
+  border-top:1px solid var(--line);
+  margin:18px 0;
+}
+
+.app-header{
+  padding:18px 18px 10px;
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.subtle{ color:var(--muted); }
+
+.header-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.layout{
+  padding: 0 18px 18px;
+  display:grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap:16px;
+}
+
+.card{
+  background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  padding: 14px;
+  overflow:hidden;
+}
+
+.row{ display:flex; gap:10px; align-items:center; }
+.row-space{ justify-content:space-between; }
+
+.table-wrap{
+  overflow:auto;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.08);
+}
+
+.table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:780px;
+}
+
+.table th, .table td{
+  padding:10px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  vertical-align:top;
+}
+
+.table th{
+  color:#cfe0ff;
+  font-weight:600;
+  background: rgba(0,0,0,.18);
+}
+
+.table td .mini{
+  font-family:var(--mono);
+  color:var(--muted);
+  margin-top: 4px;
+  display:block;
+}
+
+.table td.num, .table th.num{
+  text-align:right;
+  white-space:nowrap;
+}
+
+.table tr:last-child td{ border-bottom:0; }
+
+/* --- Buttons --- */
+.btn{
+  cursor:pointer;
+  background: var(--btn);
+  border:1px solid rgba(255,255,255,.12);
+  color: var(--text);
+  padding: 8px 10px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.btn:hover{ filter:brightness(1.08); }
+
+.btn:active{ transform: translateY(1px); }
+
+.btn-secondary{
+  background: var(--btn2);
+}
+
+.btn-danger{
+  background: rgba(255,107,107,.15);
+  border-color: rgba(255,107,107,.35);
+  color:#ffd7d7;
+}
+
+/* Make file input label button look like a button */
+label.btn{ display:inline-flex; align-items:center; gap:8px; }
+
+/* --- Dark form controls everywhere (prevents white inputs) --- */
+input, select, textarea, button{
+  font: inherit;
+}
+
+.row input[type="text"], .row select,
+.table input[type="text"], .table select,
+.table textarea{
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.10);
+  color: var(--text);
+  padding: 8px 10px;
+  border-radius:10px;
+  outline:none;
+}
+
+/* number inputs */
+input[type="number"]{
+  width: 96px;
+  padding: 6px 8px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.04);
+  color: var(--text);
+  outline:none;
+}
+
+input[type="checkbox"]{ transform: scale(1.1); }
+
+textarea{
+  width: 100%;
+  min-height: 42px;
+  resize: vertical;
+  padding: 8px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.04);
+  color: var(--text);
+  outline:none;
+}
+
+/* Focus ring */
+.row input[type="text"]:focus, .row select:focus,
+.table input[type="text"]:focus, .table select:focus,
+input[type="number"]:focus, textarea:focus{
+  border-color: rgba(93,214,199,.45);
+  box-shadow: 0 0 0 3px rgba(93,214,199,.12);
+}
+
+/* Disabled */
+input:disabled, select:disabled, textarea:disabled, button:disabled{
+  opacity: .55;
+  cursor: not-allowed;
+}
+
+/* Ensure placeholder isn't bright */
+input::placeholder, textarea::placeholder{
+  color: rgba(174,185,214,.65);
+}
+
+/* Dropdown arrow styling */
+select{
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, rgba(255,255,255,.7) 50%),
+    linear-gradient(135deg, rgba(255,255,255,.7) 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) 50%,
+    calc(100% - 12px) 50%;
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+  padding-right: 32px;
+}
+
+select{ min-width:220px; }
+
+/* --- Metrics --- */
+.metrics{ margin-top:14px; }
+
+.metrics-grid{
+  display:grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap:10px;
+}
+
+.metric{
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:12px;
+  padding:10px;
+  background: rgba(0,0,0,.14);
+}
+
+.metric .label{ color:var(--muted); font-size:12px; }
+
+.metric .value{ font-size:20px; font-weight:800; margin-top:2px; }
+
+.metric.highlight{
+  border-color: rgba(93,214,199,.35);
+  background: rgba(93,214,199,.08);
+}
+
+.metric.warn{
+  border-color: rgba(255,107,107,.35);
+  background: rgba(255,107,107,.08);
+}
+
+/* Tooltip cue */
+.label[title]{
+  cursor: help;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: rgba(255,255,255,.35);
+  text-underline-offset: 3px;
+}
+
+/* --- Snapshots / Chart --- */
+.snapshots{ margin-top:16px; }
+
+#trendCanvas{
+  width:100%;
+  height:260px;
+  display:block;
+  background: rgba(0,0,0,.14);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:12px;
+  margin:10px 0 12px;
+}
+
+/* --- Mode tabs (Criteria vs Assessment) --- */
+.mode-tabs{
+  display:flex;
+  gap:10px;
+  margin-bottom: 12px;
+}
+
+.mode-tab{
+  flex: 1;
+  cursor: pointer;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.10);
+  color: var(--text);
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-weight: 800;
+}
+
+.mode-tab:hover{ filter: brightness(1.06); }
+
+.mode-tab.is-active{
+  border-color: rgba(93,214,199,.45);
+  background: rgba(93,214,199,.10);
+}
+
+.mode-panel.is-hidden{ display:none; }
+
+.footer{ padding: 0 18px 18px; }
+
+/* --- Small screens --- */
+@media (max-width: 1050px){
+  .layout{ grid-template-columns: 1fr; }
+  select{ min-width: 180px; }
+}
+
+/* Assessment dimension header rows */
+.dim-row td{
+  background: rgba(0,0,0,.22);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+.dim-title{
+  font-weight: 900;
+  color: #cfe0ff;
+  letter-spacing: .02em;
+}
+
+.dim-hint{
+  font-weight: 600;
+  color: rgba(174,185,214,.85);
+}
+/* Assessment dimension header rows */
+.dim-row td{
+  background: rgba(0,0,0,.22);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+.dim-title{
+  font-weight: 900;
+  color: #cfe0ff;
+  letter-spacing: .02em;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.dim-hint{
+  font-weight: 600;
+  color: rgba(174,185,214,.85);
+}
+
+.dim-toggle{
+  display:inline-block;
+  width: 18px;
+  text-align:center;
+  color: rgba(255,255,255,.75);
+  transition: transform .12s ease;
+}
+
+.dim-row{
+  cursor: pointer;
+  user-select: none;
+}
+
+.dim-row:hover td{
+  background: rgba(0,0,0,.30);
+}
+
+.assess-item.is-hidden{
+  display:none;
+}
+
+/* Assessment dimension header rows (lighter) */
+.dim-row td{
+  background: rgba(255,255,255,.06); /* lighter than before */
+  border-bottom: 1px solid rgba(255,255,255,.10);
+}
+
+.dim-row:hover td{
+  background: rgba(255,255,255,.09);
+}
+
+.dim-title{
+  font-weight: 900;
+  color: #d7e6ff;
+  letter-spacing: .02em;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.dim-hint{
+  font-weight: 600;
+  color: rgba(174,185,214,.90);
+}
+
+.dim-toggle{
+  display:inline-block;
+  width: 18px;
+  text-align:center;
+  color: rgba(255,255,255,.78);
+}
+
+.dim-row{
+  cursor: pointer;
+  user-select: none;
+}
+
+.assess-item.is-hidden{
+  display:none;
+}
+
+.table td .mini{
+  font-family: var(--mono);
+  font-size: 11px;
+  color: rgba(174,185,214,.45);
+  opacity: 0;
+  margin-top: 4px;
+  display:block;
+  transition: opacity .12s ease;
+}
+
+.table tr:hover td .mini{
+  opacity: .55;
+}
